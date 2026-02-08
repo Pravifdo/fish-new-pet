@@ -1,0 +1,259 @@
+/* Container */
+.home-page {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Carousel wrapper */
+.carousel-custom {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Slide */
+.carousel-item {
+  display: none;
+  position: relative;
+}
+
+.carousel-item.active {
+  display: block;
+}
+
+/* Image Full Width */
+.carousel-img {
+  width: 100vw;
+  height: 60vh;
+  object-fit: cover;
+}
+
+/* Text Centered with Animation */
+.carousel-text-center {
+  position: absolute;
+  bottom: 20%; /* start slightly below center */
+  left: 50%;
+  transform: translate(-50%, 50px); /* start lower */
+  text-align: center;
+  color: white;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 15px 25px;
+  border-radius: 10px;
+  max-width: 80%;
+  opacity: 0;
+  animation: slideUp 1s forwards; /* animation */
+}
+
+.carousel-item.active .carousel-text-center {
+  animation: slideUp 1s forwards;
+}
+
+/* Animation keyframes */
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 50px); /* start below */
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0); /* final position center */
+  }
+}
+
+.carousel-text-center h2 {
+  font-size: 32px;
+  margin: 0;
+}
+
+.carousel-text-center p {
+  font-size: 18px;
+  margin: 5px 0 0 0;
+}
+
+/* Indicators */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.carousel-indicators span {
+  width: 12px;
+  height: 12px;
+  background-color: #555;
+  border-radius: 50%;
+  margin: 0 5px;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.carousel-indicators span.active {
+  opacity: 1;
+  background-color: #222;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .carousel-text-center h2 {
+    font-size: 24px;
+  }
+  .carousel-text-center p {
+    font-size: 14px;
+  }
+  .carousel-img {
+    height: 50vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-text-center h2 {
+    font-size: 18px;
+  }
+  .carousel-text-center p {
+    font-size: 12px;
+  }
+  .carousel-img {
+    height: 40vh;
+  }
+}
+/* New Arrivals section */
+.New.Arrivals {
+  text-align: center;
+  margin-top: 50px;
+}
+
+/* Heading style */
+.New.Arrivals h2 {
+  font-size: 36px;
+  font-family: 'Playwrite NZ', cursive;        /* ITALIC FONT */
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: 1px;
+  position: relative;
+  display: inline-block;
+  animation: fadeInZoom 1s ease forwards;
+}
+
+/* Underline effect */
+.New.Arrivals h2::after {
+  content: "";
+  width: 60%;
+  height: 3px;
+  display: block;
+  margin: 8px auto 0;
+  border-radius: 5px;
+}
+
+/* Animation */
+@keyframes fadeInZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .New.Arrivals h2 {
+    font-size: 26px;
+  }
+}
+
+
+/* Category links container */
+.category-links {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+/* Individual category link */
+.category-link {
+  padding: 18px 35px;
+  background: linear-gradient(135deg, #0d6efd, #20c997);
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+
+  /* Animation on load */
+  opacity: 0;
+  transform: translateY(40px) scale(0.9);
+  animation: fadeSlideUp 0.8s ease forwards;
+}
+
+/* Delay animation for each link */
+.category-link:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.category-link:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.category-link:nth-child(3) {
+  animation-delay: 0.6s;
+}
+.category-link:nth-child(4) {
+  animation-delay: 0.8s;
+}
+
+/* Hover animation */
+.category-link:hover {
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* Ripple shine effect */
+.category-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: skewX(-25deg);
+}
+
+.category-link:hover::before {
+  animation: shine 0.6s;
+}
+
+/* Fade + slide animation */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Shine animation */
+@keyframes shine {
+  from {
+    left: -100%;
+  }
+  to {
+    left: 120%;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .category-link {
+    font-size: 16px;
+    padding: 15px 28px;
+  }
+}

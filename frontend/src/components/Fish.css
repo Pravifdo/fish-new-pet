@@ -1,0 +1,242 @@
+/* Fish.css */
+
+/* General container styles */
+.fish-container {
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Video Section */
+.fish-video-page {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.fish-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.fish-content {
+  position: relative;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 3rem 2rem;
+  border-radius: 15px;
+  max-width: 800px;
+  margin: 0 1rem;
+  backdrop-filter: blur(5px);
+}
+
+.fish-content h2 {
+  color: #ffffff;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.fish-content p {
+  color: #f0f0f0;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.explore-btn {
+  display: inline-block;
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 30px;
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.explore-btn:hover {
+  background-color: transparent;
+  border-color: #4CAF50;
+  color: #4CAF50;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Shop Rules Section */
+.fish-rules {
+  padding: 4rem 2rem;
+  background-color: #f8f9fa;
+}
+
+.fish-rules h3 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 3rem;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid #4CAF50;
+  display: inline-block;
+  width: 100%;
+}
+
+.first-rule {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4rem;
+  gap: 3rem;
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.first-rule:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.rules-image {
+  width: 45%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.rules-image:hover {
+  transform: scale(1.02);
+}
+
+.rule-text {
+  width: 55%;
+}
+
+.rule-text p {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #444;
+}
+
+.rule-text strong {
+  color: #2c3e50;
+}
+
+.fish-rules > p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: #444;
+  padding: 0 1rem;
+  line-height: 1.8;
+}
+
+.fish-rules > p:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .fish-content h2 {
+    font-size: 2.5rem;
+  }
+  
+  .fish-content p {
+    font-size: 1.1rem;
+  }
+  
+  .first-rule {
+    gap: 2rem;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .fish-video-page {
+    height: 80vh;
+  }
+  
+  .fish-content {
+    padding: 2rem 1.5rem;
+    margin: 0 1rem;
+  }
+  
+  .fish-content h2 {
+    font-size: 2rem;
+  }
+  
+  .fish-content p {
+    font-size: 1rem;
+  }
+  
+  .explore-btn {
+    padding: 10px 25px;
+    font-size: 1rem;
+  }
+  
+  .fish-rules {
+    padding: 3rem 1rem;
+  }
+  
+  .fish-rules h3 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .first-rule {
+    flex-direction: column !important;
+    margin-bottom: 3rem;
+  }
+  
+  .first-rule:nth-child(even) {
+    flex-direction: column !important;
+  }
+  
+  .rules-image {
+    width: 100%;
+    height: 250px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .rule-text {
+    width: 100%;
+  }
+  
+  .rule-text p,
+  .fish-rules > p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .fish-video-page {
+    height: 70vh;
+  }
+  
+  .fish-content h2 {
+    font-size: 1.8rem;
+  }
+  
+  .fish-rules h3 {
+    font-size: 1.8rem;
+  }
+  
+  .first-rule {
+    padding: 1rem;
+  }
+  
+  .rules-image {
+    height: 200px;
+  }
+}
