@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from "axios";
 import './Login.css';
 
 const Signup = () => {
+
   const navigate = useNavigate();
-  const [userType, setUserType] = useState(null); // 'customer' or 'business'
-  
+
+  // user type
+  const [userType, setUserType] = useState(null);
+
+  // form data
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,19 +19,23 @@ const Signup = () => {
     image: null,
     imageName: ''
   });
-  
+
   const [successMessage, setSuccessMessage] = useState('');
 
+  // ================= INPUT CHANGE =================
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData({
       ...formData,
       [name]: value
     });
   };
 
+  // ================= IMAGE UPLOAD =================
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
+
     if (file) {
       setFormData({
         ...formData,
@@ -36,54 +45,78 @@ const Signup = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  // ================= SUBMIT =================
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    // password validation
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      alert("Passwords do not match!");
       return;
     }
 
     if (!formData.image) {
-      alert(`Please upload a ${userType === 'customer' ? 'face' : 'business place'} image`);
+      alert(`Please upload a ${userType === 'customer'
+        ? 'face'
+        : 'business place'} image`);
       return;
     }
-    
-    // Save image URL to localStorage
-    const imageUrl = URL.createObjectURL(formData.image);
-    localStorage.setItem('userImage', imageUrl);
 
-    // Show success message
-    setSuccessMessage('✅ Registration successful! Redirecting to login...');
-    console.log(`${userType.toUpperCase()} Signup data:`, formData);
-    
-    // Clear form
-    setFormData({
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      image: null,
-      imageName: ''
-    });
-    
-    setUserType(null);
-    
-    // Redirect to login page after 2.5 seconds
-    setTimeout(() => {
-      navigate('/login');
-    }, 2500);
+    try {
+      // create formData object for backend
+      const data = new FormData();
+
+      data.append("name", formData.name);
+      data.append("email", formData.email);
+      data.append("password", formData.password);
+      data.append("userType", userType);
+      data.append("image", formData.image);
+
+      // API request
+      await axios.post(
+        "http://localhost:5000/register",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setSuccessMessage("✅ Registration successful! Redirecting to login...");
+
+      // reset form
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        image: null,
+        imageName: ''
+      });
+
+      setUserType(null);
+
+      // redirect
+      setTimeout(() => {
+        navigate('/login');
+      }, 2500);
+
+    } catch (error) {
+      alert(error.response?.data?.message || "Registration failed");
+    }
   };
 
+  // ================= TYPE SELECT SCREEN =================
   if (!userType) {
     return (
       <div className="login-container">
         <div className="type-selection-box">
           <h2>Create Account</h2>
           <p className="type-subtitle">Choose your account type</p>
-          
+
           <div className="button-group">
-            <button 
+            <button
               className="type-btn customer-btn"
               onClick={() => setUserType('customer')}
             >
@@ -91,8 +124,8 @@ const Signup = () => {
               <span className="btn-text">Customer</span>
               <span className="btn-desc">Buy aquatic products</span>
             </button>
-            
-            <button 
+
+            <button
               className="type-btn business-btn"
               onClick={() => setUserType('business')}
             >
@@ -110,19 +143,31 @@ const Signup = () => {
     );
   }
 
+  // ================= SIGNUP FORM =================
   return (
     <div className="login-container">
       <div className="login-box">
-        <button className="back-btn" onClick={() => setUserType(null)}>← Back</button>
-        <h2>Sign Up as {userType.charAt(0).toUpperCase() + userType.slice(1)}</h2>
-        
+
+        <button
+          className="back-btn"
+          onClick={() => setUserType(null)}
+        >
+          ← Back
+        </button>
+
+        <h2>
+          Sign Up as {userType.charAt(0).toUpperCase() + userType.slice(1)}
+        </h2>
+
         {successMessage && (
           <div className="success-message">
             {successMessage}
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit}>
+
+          {/* NAME */}
           <div className="input-group">
             <label>Full Name</label>
             <input
@@ -135,6 +180,7 @@ const Signup = () => {
             />
           </div>
 
+          {/* EMAIL */}
           <div className="input-group">
             <label>Email</label>
             <input
@@ -147,6 +193,7 @@ const Signup = () => {
             />
           </div>
 
+          {/* PASSWORD */}
           <div className="input-group">
             <label>Password</label>
             <input
@@ -159,6 +206,7 @@ const Signup = () => {
             />
           </div>
 
+          {/* CONFIRM PASSWORD */}
           <div className="input-group">
             <label>Confirm Password</label>
             <input
@@ -171,13 +219,19 @@ const Signup = () => {
             />
           </div>
 
+          {/* IMAGE UPLOAD */}
           <div className="input-group">
             <label>
-              {userType === 'customer' ? 'Upload Face Image 📸' : 'Upload Business Place Image 🏪'}
+              {userType === 'customer'
+                ? 'Upload Face Image 📸'
+                : 'Upload Business Place Image 🏪'}
             </label>
-            <div 
+
+            <div
               className="image-upload-wrapper"
-              onClick={() => document.getElementById('imageInput').click()}
+              onClick={() =>
+                document.getElementById('imageInput').click()
+              }
             >
               <input
                 id="imageInput"
@@ -187,23 +241,34 @@ const Signup = () => {
                 className="image-input"
                 required
               />
+
               <span className="upload-text">
-                {formData.imageName || `Click to choose ${userType === 'customer' ? 'face' : 'business'} image`}
+                {formData.imageName ||
+                  `Click to choose ${userType === 'customer'
+                    ? 'face'
+                    : 'business'} image`}
               </span>
             </div>
+
             {formData.image && (
               <div className="image-preview">
-                <img src={URL.createObjectURL(formData.image)} alt="preview" />
+                <img
+                  src={URL.createObjectURL(formData.image)}
+                  alt="preview"
+                />
               </div>
             )}
           </div>
 
-          <button type="submit" className="login-btn">Sign Up</button>
+          <button type="submit" className="login-btn">
+            Sign Up
+          </button>
         </form>
 
         <p className="signup-link">
           Already have an account? <Link to="/login">Login</Link>
         </p>
+
       </div>
     </div>
   );

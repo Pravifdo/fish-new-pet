@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Login.css';
+import axios from 'axios';
 
 const Login = () => {
 	const [userType, setUserType] = useState(null); // 'customer' or 'business'
@@ -18,30 +19,37 @@ const Login = () => {
 		});
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		
-		// Retrieve user image from localStorage
-		const userImage = localStorage.getItem('userImage');
-		if (userImage) {
-			localStorage.setItem('loggedInUserImage', userImage);
-		}
 
-		// Show success message
-		setSuccessMessage(`✅ ${userType.toUpperCase()} login successful!`);
-		
-		// Clear form
-		setFormData({
-			email: '',
-			password: ''
-		});
-		
-		console.log(`${userType} Login data:`, formData);
-		
-		// Hide message after 2 seconds
-		setTimeout(() => {
-			setSuccessMessage('');
-		}, 2000);
+		try {
+			const response = await axios.post('http://localhost:5000/login', {
+				...formData,
+				userType
+			});
+
+			const { token, user } = response.data;
+
+			// Save token and user data to localStorage
+			localStorage.setItem('token', token);
+			localStorage.setItem('user', JSON.stringify(user));
+
+			setSuccessMessage(`✅ ${userType.toUpperCase()} login successful!`);
+
+			// Clear form
+			setFormData({
+				email: '',
+				password: ''
+			});
+
+			// Redirect or perform additional actions
+			setTimeout(() => {
+				setSuccessMessage('');
+			}, 2000);
+		} catch (error) {
+			console.error('Login error:', error.response?.data?.message || error.message);
+			alert(error.response?.data?.message || 'Login failed. Please try again.');
+		}
 	};
 
 	if (!userType) {
