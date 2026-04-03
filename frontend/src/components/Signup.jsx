@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 
 const Signup = () => {
+  const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
+  
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleChange = (e) => {
     setFormData({
@@ -23,13 +27,36 @@ const Signup = () => {
       alert('Passwords do not match!');
       return;
     }
+    
+    // Show success message
+    setSuccessMessage('✅ Registration successful! Redirecting to login...');
     console.log('Signup data:', formData);
+    
+    // Clear form
+    setFormData({
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    });
+    
+    // Redirect to login page after 2.5 seconds
+    setTimeout(() => {
+      navigate('/login');
+    }, 2500);
   };
 
   return (
     <div className="login-container">
       <div className="login-box">
         <h2>Sign Up</h2>
+        
+        {successMessage && (
+          <div className="success-message">
+            {successMessage}
+          </div>
+        )}
+        
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label>Full Name</label>
