@@ -49,6 +49,10 @@ const Signup = () => {
       return;
     }
     
+    // Save image URL to localStorage
+    const imageUrl = URL.createObjectURL(formData.image);
+    localStorage.setItem('userImage', imageUrl);
+
     // Show success message
     setSuccessMessage('✅ Registration successful! Redirecting to login...');
     console.log(`${userType.toUpperCase()} Signup data:`, formData);

@@ -21,6 +21,12 @@ const Login = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		
+		// Retrieve user image from localStorage
+		const userImage = localStorage.getItem('userImage');
+		if (userImage) {
+			localStorage.setItem('loggedInUserImage', userImage);
+		}
+
 		// Show success message
 		setSuccessMessage(`✅ ${userType.toUpperCase()} login successful!`);
 		
