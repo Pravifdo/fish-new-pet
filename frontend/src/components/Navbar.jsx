@@ -1,9 +1,7 @@
 // src/components/Navbar.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // if you're using React Router
-// import { Link } from 'next/link';  ← use this if you're using Next.js
-
-import './Navbar.css'; // we'll put styles in a separate file
+import { Link } from 'react-router-dom'; // React Router for navigation
+import './Navbar.css';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +10,6 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   };
 
-  // Close mobile menu when user clicks a link
   const closeMenu = () => {
     setIsOpen(false);
   };
@@ -46,7 +43,17 @@ const Navbar = () => {
           <Link to="/blog" onClick={closeMenu}>
             Blog
           </Link>
-          
+        </div>
+
+        {/* User icon */}
+        <div className="user-icon" onClick={closeMenu}>
+          <Link to="/login">
+            <img
+              src="/images/user-avatar.png" // Replace with your avatar image path
+              alt="User"
+              className="avatar"
+            />
+          </Link>
         </div>
 
         <div 
