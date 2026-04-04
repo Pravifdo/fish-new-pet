@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import axios from 'axios';
 
 const Login = () => {
+	const navigate = useNavigate();
 	const [userType, setUserType] = useState(null); // 'customer' or 'business'
 	
 	const [formData, setFormData] = useState({
@@ -33,6 +34,7 @@ const Login = () => {
 			// Save token and user data to localStorage
 			localStorage.setItem('token', token);
 			localStorage.setItem('user', JSON.stringify(user));
+			localStorage.setItem('userType', userType);
 
 			setSuccessMessage(`✅ ${userType.toUpperCase()} login successful!`);
 
@@ -42,10 +44,14 @@ const Login = () => {
 				password: ''
 			});
 
-			// Redirect or perform additional actions
+			// Redirect based on user type
 			setTimeout(() => {
-				setSuccessMessage('');
-			}, 2000);
+				if (userType === 'business') {
+					navigate('/business');
+				} else {
+					navigate('/');
+				}
+			}, 1500);
 		} catch (error) {
 			console.error('Login error:', error.response?.data?.message || error.message);
 			alert(error.response?.data?.message || 'Login failed. Please try again.');
