@@ -13,6 +13,7 @@ import Plants from './components/Plants ';
 import Tools from './components/Tools ';
 import BusinessDashboard from './components/Businesspage/busimain';
 import Footer from './components/Footer';
+import NewPates from './components/Businesspage/NewPates';
 
 // Scroll to top on route change
 function ScrollToTop() {
@@ -46,8 +47,9 @@ function App(){
         <Route path='tools' element={<Tools />} />
         <Route path="/business" element={<BusinessDashboard />} />
         <Route path="/customer" element={<Home />} />
+        <Route path="/new-pates" element={<NewPates />} />
       </Routes>
-      <Footer/>
+      
     </Router>
   );
 }
