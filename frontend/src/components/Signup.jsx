@@ -1,275 +1,102 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import './Login.css';
+import "./Login.css";
 
 const Signup = () => {
-
   const navigate = useNavigate();
 
-  // user type
   const [userType, setUserType] = useState(null);
-
-  // form data
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    shopName: "",
     image: null,
-    imageName: ''
+    imageName: "",
   });
 
-  const [successMessage, setSuccessMessage] = useState('');
-
-  // ================= INPUT CHANGE =================
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
-  // ================= IMAGE UPLOAD =================
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
-
-    if (file) {
-      setFormData({
-        ...formData,
-        image: file,
-        imageName: file.name
-      });
-    }
+    if (file) setFormData({ ...formData, image: file, imageName: file.name });
   };
 
-  // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // password validation
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
     if (!formData.image) {
-      alert(`Please upload a ${userType === 'customer'
-        ? 'face'
-        : 'business place'} image`);
+      alert(`Please upload a ${userType === "customer" ? "face" : "shop"} image`);
       return;
     }
 
     try {
-      // create formData object for backend
       const data = new FormData();
-
       data.append("name", formData.name);
       data.append("email", formData.email);
       data.append("password", formData.password);
       data.append("userType", userType);
+      if (userType === "business") data.append("shopName", formData.shopName);
       data.append("image", formData.image);
 
-      // API request
-      await axios.post(
-        "http://localhost:5000/api/auth/register",
-        data,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      setSuccessMessage("✅ Registration successful! Redirecting to login...");
-
-      // reset form
-      setFormData({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        image: null,
-        imageName: ''
+      const res = await axios.post("http://localhost:5000/api/auth/register", data, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      setUserType(null);
+      // Save user info including image URL to localStorage
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("userEmail", res.data.user.email);
 
-      // redirect
-      setTimeout(() => {
-        navigate('/login');
-      }, 2500);
-
-    } catch (error) {
-      alert(error.response?.data?.message || "Registration failed");
+      navigate("/business"); // Redirect to dashboard
+    } catch (err) {
+      alert(err.response?.data?.message || "Registration failed");
     }
-    console.log("Form submitted data:", formData);
   };
 
-  // ================= TYPE SELECT SCREEN =================
   if (!userType) {
     return (
       <div className="login-container">
         <div className="type-selection-box">
           <h2>Create Account</h2>
-          <p className="type-subtitle">Choose your account type</p>
-
           <div className="button-group">
-            <button
-              className="type-btn customer-btn"
-              onClick={() => setUserType('customer')}
-            >
-              <span className="btn-icon">👤</span>
-              <span className="btn-text">Customer</span>
-              <span className="btn-desc">Buy aquatic products</span>
-            </button>
-
-            <button
-              className="type-btn business-btn"
-              onClick={() => setUserType('business')}
-            >
-              <span className="btn-icon">🏪</span>
-              <span className="btn-text">Business</span>
-              <span className="btn-desc">Sell aquatic products</span>
-            </button>
+            <button onClick={() => setUserType("customer")}>Customer</button>
+            <button onClick={() => setUserType("business")}>Business</button>
           </div>
-
-          <p className="login-redirect">
-            Already have an account? <Link to="/login">Login</Link>
-          </p>
         </div>
       </div>
     );
   }
 
-  // ================= SIGNUP FORM =================
   return (
     <div className="login-container">
       <div className="login-box">
-
-        <button
-          className="back-btn"
-          onClick={() => setUserType(null)}
-        >
-          ← Back
-        </button>
-
-        <h2>
-          Sign Up as {userType.charAt(0).toUpperCase() + userType.slice(1)}
-        </h2>
-
-        {successMessage && (
-          <div className="success-message">
-            {successMessage}
-          </div>
-        )}
-
+        <button onClick={() => setUserType(null)}>← Back</button>
+        <h2>Sign Up as {userType}</h2>
         <form onSubmit={handleSubmit}>
+          <input name="name" placeholder="Full Name" onChange={handleChange} required />
+          <input name="email" type="email" placeholder="Email" onChange={handleChange} required />
+          <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
+          <input name="confirmPassword" type="password" placeholder="Confirm Password" onChange={handleChange} required />
 
-          {/* NAME */}
-          <div className="input-group">
-            <label>Full Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your full name"
-              required
-            />
-          </div>
+          {userType === "business" && (
+            <input name="shopName" placeholder="Shop Name" onChange={handleChange} required />
+          )}
 
-          {/* EMAIL */}
-          <div className="input-group">
-            <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              required
-            />
-          </div>
+          <input type="file" accept="image/*" onChange={handleImageUpload} required />
+          {formData.image && <p>Selected: {formData.imageName}</p>}
 
-          {/* PASSWORD */}
-          <div className="input-group">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-
-          {/* CONFIRM PASSWORD */}
-          <div className="input-group">
-            <label>Confirm Password</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="Confirm your password"
-              required
-            />
-          </div>
-
-          {/* IMAGE UPLOAD */}
-          <div className="input-group">
-            <label>
-              {userType === 'customer'
-                ? 'Upload Face Image 📸'
-                : 'Upload Business Place Image 🏪'}
-            </label>
-
-            <div
-              className="image-upload-wrapper"
-              onClick={() =>
-                document.getElementById('imageInput').click()
-              }
-            >
-              <input
-                id="imageInput"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="image-input"
-                required
-              />
-
-              <span className="upload-text">
-                {formData.imageName ||
-                  `Click to choose ${userType === 'customer'
-                    ? 'face'
-                    : 'business'} image`}
-              </span>
-            </div>
-
-            {formData.image && (
-              <div className="image-preview">
-                <img
-                  src={URL.createObjectURL(formData.image)}
-                  alt="preview"
-                />
-              </div>
-            )}
-          </div>
-
-          <button type="submit" className="login-btn">
-            Sign Up
-          </button>
+          <button type="submit">Sign Up</button>
         </form>
-
-        <p className="signup-link">
-          Already have an account? <Link to="/login">Login</Link>
-        </p>
-
       </div>
     </div>
   );

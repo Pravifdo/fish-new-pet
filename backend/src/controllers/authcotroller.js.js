@@ -41,7 +41,7 @@ export const loginUser = async (req, res) => {
 
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, userType } = req.body;
+    const { name, email, password, userType, shopName } = req.body;
     const image = req.file;
 
     // Validate required fields
@@ -74,6 +74,7 @@ export const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
       userType,
+      shopName: shopName || '',
       image: imageDataUrl
     });
 
@@ -85,11 +86,11 @@ export const registerUser = async (req, res) => {
         id: newUser._id,
         name: newUser.name,
         email: newUser.email,
-        userType: newUser.userType
-       
+        userType: newUser.userType,
+        image: newUser.image,
+        shopName: newUser.shopName || ''
       }
     });
-       console.log("New user registered:", newUser);
 
 
   } catch (error) {

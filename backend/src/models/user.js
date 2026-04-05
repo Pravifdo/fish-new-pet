@@ -5,6 +5,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    shopName: {
+        type: String,
+        required: false
+    },
     userType: {
         type: String,
         enum: ['customer', 'business'],
