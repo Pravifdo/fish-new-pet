@@ -74,7 +74,7 @@ const Signup = () => {
 
       // API request
       await axios.post(
-        "http://localhost:5000/register",
+        "http://localhost:5000/api/auth/register",
         data,
         {
           headers: {
@@ -105,6 +105,7 @@ const Signup = () => {
     } catch (error) {
       alert(error.response?.data?.message || "Registration failed");
     }
+    console.log("Form submitted data:", formData);
   };
 
   // ================= TYPE SELECT SCREEN =================

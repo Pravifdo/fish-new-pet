@@ -86,8 +86,11 @@ export const registerUser = async (req, res) => {
         name: newUser.name,
         email: newUser.email,
         userType: newUser.userType
+       
       }
     });
+       console.log("New user registered:", newUser);
+
 
   } catch (error) {
     res.status(500).json({
