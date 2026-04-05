@@ -49,7 +49,11 @@ const BusiMain = () => {
         )}
 
         <button onClick={handleLogout}>Logout</button>
+        <button onClick={() => navigate('/new-pates')} style={{marginTop: "20px"}}>
+          Add New Pates
+        </button>
       </div>
+      
     </div>
   );
 };
