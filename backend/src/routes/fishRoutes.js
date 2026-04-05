@@ -15,6 +15,7 @@ router.post("/add",async (req, res) =>{
             stock
         });
         await newFish.save();
+        console.log('New fish product added:', newFish);
         res.status(201).json({
             message : "Fish product added successfully",
             fish: newFish
@@ -25,6 +26,7 @@ router.post("/add",async (req, res) =>{
             error: error.message
         })
     }
+    console.log(req.body);
     
 });
 

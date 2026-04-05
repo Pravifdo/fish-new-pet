@@ -1,114 +1,100 @@
+import express from 'express';
 import Fish from '../models/Fish.js';
 
+const router = express.Router();
 
-// ==============================
-// ADD NEW FISH
-// ==============================
-export const addFish = async (req, res) => {
-  try {
-    const { name, brand, price, stock } = req.body;
+// Create a new fish product
+router.post("/add",async (req, res) =>{
+    try {
+        const {name ,brand, price, stock} = req.body;
 
-    // validation
-    if (!name || !brand || !price || !stock) {
-      return res.status(400).json({
-        message: "All fields are required"
-      });
+        const newFish = new Fish ({
+            name,
+            brand,
+            price,
+            stock
+        });
+        await newFish.save();
+        console.log('New fish product added:', newFish);
+        res.status(201).json({
+            message : "Fish product added successfully",
+            fish: newFish
+        });
+    } catch (error){
+        res.status(500).json({
+            message: "Error adding fish product",
+            error: error.message
+        })
     }
-
-    const newFish = new Fish({
-      name,
-      brand,
-      price,
-      stock
-    });
-
-    await newFish.save();
-
-    res.status(201).json({
-      message: "✅ Fish added successfully",
-      fish: newFish
-    });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-
-// ==============================
-// GET ALL FISH
-// ==============================
-export const getAllFish = async (req, res) => {
-  try {
-    const fishes = await Fish.find().sort({ createdAt: -1 });
-    res.json(fishes);
-
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-
-// ==============================
-// DELETE FISH
-// ==============================
-export const deleteFish = async (req, res) => {
-  try {
-    const { id } = req.params;
-    await Fish.findByIdAndDelete(id);
-    res.json({ message: "✅ Fish deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-
-// ==============================
-// UPDATE FISH PRICE
-// ==============================
-export const updateFishPrice = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { price } = req.body;
+    console.log(req.body);
     
-    if (!price) {
-      return res.status(400).json({ message: "Price is required" });
+});
+
+
+// Get all fish products
+router.get("/all", async (req, res) => {
+    try {
+        const fishes = await Fish.fish();
+        res.json(fishes);    
+    } catch (error) {
+        res.status(500).json({
+            message: "Error fetching fish products",
+            error: error.message
+        });
     }
-    
-    const updatedFish = await Fish.findByIdAndUpdate(
-      id,
-      { price },
-      { new: true }
-    );
-    
-    res.json({ message: "✅ Price updated", fish: updatedFish });
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
-  }
-};
+});
 
 
-// ==============================
-// UPDATE FISH STOCK
-// ==============================
-export const updateFishStock = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { stock } = req.body;
-    
-    if (stock === undefined) {
-      return res.status(400).json({ message: "Stock is required" });
+// Update fish stock
+router.put("/update-stock/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { stock } = req.body;
+
+        const fish = await Fish.findById(id);
+        if (!fish) {
+            return res.status(404).json({
+                message: "Fish product not found"
+            });
+        }
+
+        fish.stock = stock;
+        await fish.save();
+
+        res.json({
+            message: "Fish stock updated successfully",
+            fish: fish
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Error updating fish stock",
+            error: error.message
+        });
     }
-    
-    const updatedFish = await Fish.findByIdAndUpdate(
-      id,
-      { stock },
-      { new: true }
-    );
-    
-    res.json({ message: "✅ Stock updated", fish: updatedFish });
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
-  }
-};
+});
+
+// delete fish product
+router.delete("/delete/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const fish = await Fish.findByIdAndDelete(id);
+        if (!fish) {
+            return res.status(404).json({
+                message: "Fish product not found"
+            });
+        }
+
+        res.json({
+            message: "Fish product deleted successfully",
+            fish: fish
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Error deleting fish product",
+            error: error.message
+        });
+    }
+});
+
+export default router;

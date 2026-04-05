@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./NewPates.css";
 
 const NewPates = () => {
@@ -58,8 +59,20 @@ const NewPates = () => {
     setFormData({ ...formData, image: "" });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/fish/add",
+        formData
+      );
+
+      console.log("Fish Pate created:", response.data);
+    } catch (error) {
+      console.error("Error creating fish pate:", error);
+
+    }
 
     const existingFish =
       JSON.parse(localStorage.getItem("fishPates")) || [];
@@ -67,7 +80,7 @@ const NewPates = () => {
     existingFish.push(formData);
     localStorage.setItem("fishPates", JSON.stringify(existingFish));
 
-    navigate("/");
+   
   };
 
   /* =============================
